@@ -56,6 +56,27 @@ public class HandlerGroup implements HttpHandler {
             httpExchange.sendResponseHeaders(201, bytes.length);
             os.write(bytes);
         }
+        else if(method.equals("DELETE")){
+            String url = httpExchange.getRequestURI().toString();
+
+        String[] array = url.split("/");
+        Integer groupId = Integer.parseInt(array[array.length - 1]);
+
+
+        ProductGroup getGroup = db.getGroupByID(groupId);
+
+        if(getGroup!=null){
+            db.deleteGroupByName(getGroup.getName());
+
+            System.out.println(db.showAllProducts());
+            httpExchange.sendResponseHeaders(204, 0);
+        }
+        else {
+            byte[] bytes = "not found".getBytes();
+            httpExchange.sendResponseHeaders(404, bytes.length);
+            os.write(bytes);
+        }
+        }
         os.close();
     }
 }
