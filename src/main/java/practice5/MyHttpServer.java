@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sun.net.httpserver.*;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.http.Header;
+//import org.apache.http.impl.bootstrap.HttpServer;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import practice4.Product;
@@ -14,11 +15,11 @@ import practice4.ProductGroup;
 import java.io.*;
 import java.net.InetSocketAddress;
 import java.nio.charset.StandardCharsets;
-import java.security.acl.Group;
+//import java.security.acl.Group;
 import java.util.ArrayList;
 
 public class MyHttpServer {
-    static ProductDB db = new ProductDB();
+    public static ProductDB db = new ProductDB();
     private static HttpServer server;
 
     public static void main(String[] args) throws IOException {
@@ -44,7 +45,7 @@ public class MyHttpServer {
 
 //        HttpContext context = server.createContext("/", MyHttpServer::myHandler);
 
-        server.createContext("/api/group", MyHttpServer::apiGroup);
+        server.createContext("/api/group", new HandlerGroups(db));
 //
 //        context.setAuthenticator(new Authenticator() {
 //            @Override
@@ -76,8 +77,6 @@ public class MyHttpServer {
         else {
             apiGood(httpExchange);
         }
-
-
     }
 
     public static JSONObject getJsonFromQuery(String query){
@@ -94,44 +93,44 @@ public class MyHttpServer {
         return new JSONObject(res);
     }
 
-    private static void apiGroup(HttpExchange httpExchange) throws IOException {
-        OutputStream os = httpExchange.getResponseBody();
-        String method = httpExchange.getRequestMethod();
-        System.out.println(method);
-        if(method.equals("OPTIONS")){
-            byte[] bytes = "Options".getBytes();
-            httpExchange.sendResponseHeaders(201, bytes.length);
-            os.write(bytes);
-        }
-        else if(method.equals("PUT")) {
-            JSONObject jsonObj = getJsonFromQuery(httpExchange.getRequestURI().getQuery());
-            ObjectMapper om = new ObjectMapper();
-
-            ProductGroup fromreqeust = om.readValue(jsonObj.toString(),ProductGroup.class);
-
-            System.out.println(fromreqeust.toString());
-            db.insertGroupToDB(fromreqeust);
-
-            byte[] bytes = "group created".getBytes();
-
-            httpExchange.sendResponseHeaders(201, bytes.length);
-            os.write(bytes);
-        }
-        else if (method.equals("GET")){
-            ArrayList<ProductGroup> ar = db.showAllGroups();
-            JSONArray res = new JSONArray();
-
-            for ( ProductGroup i : ar){
-                res.put(i.getName()+"#" + i.getDescription());
-            }
-
-            System.out.println(res);
-            byte[] bytes = res.toString().getBytes();
-            httpExchange.sendResponseHeaders(201, bytes.length);
-            os.write(bytes);
-        }
-        os.close();
-    }
+//    private static void apiGroup(HttpExchange httpExchange) throws IOException {
+//        OutputStream os = httpExchange.getResponseBody();
+//        String method = httpExchange.getRequestMethod();
+//        System.out.println(method);
+//        if(method.equals("OPTIONS")){
+//            byte[] bytes = "Options".getBytes();
+//            httpExchange.sendResponseHeaders(201, bytes.length);
+//            os.write(bytes);
+//        }
+//        else if(method.equals("PUT")) {
+//            JSONObject jsonObj = getJsonFromQuery(httpExchange.getRequestURI().getQuery());
+//            ObjectMapper om = new ObjectMapper();
+//
+//            ProductGroup fromreqeust = om.readValue(jsonObj.toString(),ProductGroup.class);
+//
+//            System.out.println(fromreqeust.toString());
+//            db.insertGroupToDB(fromreqeust);
+//
+//            byte[] bytes = "group created".getBytes();
+//
+//            httpExchange.sendResponseHeaders(201, bytes.length);
+//            os.write(bytes);
+//        }
+//        else if (method.equals("GET")){
+//            ArrayList<ProductGroup> ar = db.showAllGroups();
+//            JSONArray res = new JSONArray();
+//
+//            for ( ProductGroup i : ar){
+//                res.put(i.getName()+"#" + i.getDescription());
+//            }
+//
+//            System.out.println(res);
+//            byte[] bytes = res.toString().getBytes();
+//            httpExchange.sendResponseHeaders(201, bytes.length);
+//            os.write(bytes);
+//        }
+//        os.close();
+//    }
 
     private static void apiGood(HttpExchange httpExchange) throws IOException {
         System.out.println(httpExchange.getRequestMethod());
