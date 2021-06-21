@@ -27,7 +27,9 @@ public class HandlerGroups implements HttpHandler {
     public void handle(HttpExchange httpExchange) throws IOException {
         OutputStream os = httpExchange.getResponseBody();
         String method = httpExchange.getRequestMethod();
+
         System.out.println(method);
+
         if (method.equals("GET")){
             ArrayList<ProductGroup> ar = MyHttpServer.db.showAllGroups();
             JSONArray res = new JSONArray();

@@ -181,6 +181,7 @@ public class HandlerGoods implements HttpHandler {
             sendResponse(httpExchange,404,"no such products");
         }
     }
+
     private static void sendResponse(HttpExchange httpExchange, int number, String body) throws IOException {
         byte[] response = body.getBytes();
         httpExchange.sendResponseHeaders(number, response.length);
