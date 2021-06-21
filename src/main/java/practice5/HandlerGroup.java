@@ -1,9 +1,11 @@
 package practice5;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpServer;
 import org.json.JSONArray;
+import org.json.JSONObject;
 import practice4.ProductDB;
 import practice4.ProductGroup;
 
@@ -26,17 +28,31 @@ public class HandlerGroup implements HttpHandler {
         OutputStream os = httpExchange.getResponseBody();
         String method = httpExchange.getRequestMethod();
         System.out.println(method);
+        if(method.equals("OPTIONS")){
+            byte[] bytes = "Options".getBytes();
+            httpExchange.sendResponseHeaders(201, bytes.length);
+            os.write(bytes);
+        }
+        else if(method.equals("PUT")) {
+            JSONObject jsonObj = MyHttpServer.getJsonFromQuery(httpExchange.getRequestURI().getQuery());
+            ObjectMapper om = new ObjectMapper();
 
-            if (method.equals("GET")){
-            ArrayList<ProductGroup> ar = MyHttpServer.db.showAllGroups();
-            JSONArray res = new JSONArray();
+            ProductGroup fromreqeust = om.readValue(jsonObj.toString(),ProductGroup.class);
 
-            for ( ProductGroup i : ar){
-                res.put(i.getName()+"#" + i.getDescription());
-            }
+            System.out.println(fromreqeust.toString());
+            MyHttpServer.db.insertGroupToDB(fromreqeust);
 
-            System.out.println(res);
-            byte[] bytes = res.toString().getBytes();
+            byte[] bytes = "group created".getBytes();
+
+            httpExchange.sendResponseHeaders(201, bytes.length);
+            os.write(bytes);
+        }
+        else if(method.equals("GET")){
+            String[] array = httpExchange.getRequestURI().getPath().split("/");
+            ProductGroup obj = db.getGroupByID(Integer.parseInt(array[array.length-1]));
+            String str = "{'groupname':'"+obj.getName()+"','description':'"+obj.getDescription()+"'}";
+            System.out.println(str);
+            byte[] bytes = str.getBytes();
             httpExchange.sendResponseHeaders(201, bytes.length);
             os.write(bytes);
         }

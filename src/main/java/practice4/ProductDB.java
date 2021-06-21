@@ -203,6 +203,26 @@ public class ProductDB {
         return null;
     }
 
+    public ProductGroup getGroupByID(Integer id){
+        try{
+            PreparedStatement st = connection.prepareStatement("SELECT * FROM "+ group + " WHERE id = ?");
+            st.setInt(1,id);
+            ResultSet res = st.executeQuery();
+
+            if(res.next()) {
+                String name = res.getString("groupName");
+                String descr = res.getString("descriptionGroup");
+
+                return new ProductGroup(res.getInt("id"), name, descr);
+            }
+
+        }catch(SQLException e){
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
     public boolean ifGroupIdExists(Integer i){
         try {
             PreparedStatement st = connection.prepareStatement( "SELECT * FROM " +group+ " WHERE id=?");
