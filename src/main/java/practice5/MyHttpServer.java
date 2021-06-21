@@ -45,7 +45,8 @@ public class MyHttpServer {
 
 //        HttpContext context = server.createContext("/", MyHttpServer::myHandler);
 
-        server.createContext("/api/group", new HandlerGroups(db));
+        server.createContext("/api/groups", new HandlerGroups(db));
+        server.createContext("/api/group", new HandlerGroup(db));
         server.createContext("/api/good", new HandlerGoods(db));
 
 //
