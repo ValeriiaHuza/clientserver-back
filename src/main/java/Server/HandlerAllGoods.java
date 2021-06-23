@@ -10,9 +10,17 @@ import DBConnection.ProductDB;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 public class HandlerAllGoods implements HttpHandler {
 
+    private Connection connection;
+    private String product = "product";
+    private String group = "groupTable";
+    ////////////////////////////////////////////
     private static HttpServer server;
     private static ProductDB db;
 
@@ -42,7 +50,30 @@ public class HandlerAllGoods implements HttpHandler {
         httpExchange.close();
     }
 
+    public static int getAllProdID(HttpExchange httpExchange)
+    {
+        String str = httpExchange.getRequestURI().toString().substring(10);
+        String res = "";
+        for(int i=0; i<str.length(); i++) {
+            if(str.charAt(i)=='?') break;
+            res += str.charAt(i);
+        }
+        return Integer.parseInt(res);
+    }
 
+    public Integer getGroupId(String name){
+        try {
+            PreparedStatement st = connection.prepareStatement( "SELECT * FROM " +group+ " WHERE groupName=?");
+            st.setString(1, name);
+
+            ResultSet rs = st.executeQuery();
+            return rs.getInt("id");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+    /////////////////////////////////////////////////////////////////////////////////
     private static void deleteProduct(HttpExchange httpExchange) throws IOException {
         String url = httpExchange.getRequestURI().toString();
 

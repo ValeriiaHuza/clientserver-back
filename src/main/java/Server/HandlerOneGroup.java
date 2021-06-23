@@ -77,4 +77,26 @@ public class HandlerOneGroup implements HttpHandler {
         }
         os.close();
     }
+
+    public static int getGroupID(HttpExchange httpExchange){
+        String str = httpExchange.getRequestURI().toString().substring(11);
+        String res = "";
+        for(int i=0; i<str.length(); i++) {
+            if(str.charAt(i)=='?') break;
+            res += str.charAt(i);
+        }
+        return Integer.parseInt(res);
+    }
+
+    public static boolean allIsCorrect(HttpExchange httpExchange){
+        try {
+            String query = httpExchange.getRequestURI().getQuery();
+            JSONObject jsonObj = MyHttpServer.getJsonFromQuery(query);
+            String groupname = jsonObj.getString("groupname");
+            String description = jsonObj.getString("description");
+        } catch (Exception e){
+            return false;
+        }
+        return true;
+    }
 }

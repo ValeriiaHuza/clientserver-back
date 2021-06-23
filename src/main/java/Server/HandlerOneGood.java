@@ -6,6 +6,7 @@ import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpServer;
 import DBConnection.Product;
 import DBConnection.ProductDB;
+import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -166,6 +167,17 @@ public class HandlerOneGood implements HttpHandler {
         }
     }
 
+    public static int getProdID(HttpExchange httpExchange)
+    {
+        String str = httpExchange.getRequestURI().toString().substring(10);
+        String res = "";
+        for(int i=0; i<str.length(); i++) {
+            if(str.charAt(i)=='?') break;
+            res += str.charAt(i);
+        }
+        return Integer.parseInt(res);
+    }
+
     private static void getProduct(HttpExchange httpExchange) throws IOException {
         String url = httpExchange.getRequestURI().toString();
 
@@ -180,6 +192,23 @@ public class HandlerOneGood implements HttpHandler {
         } else {
             sendResponse(httpExchange,404,"no such product");
         }
+    }
+
+    public static boolean allIsCorrect(JSONObject jsonObj){
+        if(jsonObj.has("price")){
+            int price= jsonObj.getInt("price");
+            if(price<0) return false;
+        }
+        if(jsonObj.has("amount")){
+            int amount= jsonObj.getInt("amount");
+            if(amount<0) return false;
+        }
+        if(jsonObj.has("groupId")){
+            int groupid= jsonObj.getInt("groupId");
+            if(!db.hasGroup(groupid))
+                return false;
+        }
+        return true;
     }
 
     private static void sendResponse(HttpExchange httpExchange, int number, String body) throws IOException {

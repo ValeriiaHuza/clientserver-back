@@ -12,6 +12,7 @@ public class ProductDB {
      private String group = "groupTable";
 
 
+
     public void initDB(String name){
          try {
              Class.forName("org.sqlite.JDBC");
@@ -144,6 +145,20 @@ public class ProductDB {
     }
     //get
 
+//    public int getGroupId(String groupname){
+//        int groupid = 0;
+//        try {
+//            String sql1 = "SELECT id FROM productgroups WHERE groupname='"+groupname+"';";
+//            ResultSet res2 = statement.executeQuery(sql1);
+//            if(!res2.next()){
+//                System.out.println("Ви намагалися взяти id неіснуючої групи");
+//                return 0;
+//            }
+//            groupid = res2.getInt(1);
+//        } catch (SQLException e){ System.err.println("SQLException in addProduct()");}
+//        return groupid;
+//    }
+
     public Integer getGroupId(String name){
         try {
             PreparedStatement st = connection.prepareStatement( "SELECT * FROM " +group+ " WHERE groupName=?");
@@ -221,6 +236,35 @@ public class ProductDB {
         }
 
         return null;
+    }
+
+    public boolean hasGroup(int groupid){
+        try {
+            PreparedStatement st = connection.prepareStatement("SELECT description FROM groupTable WHERE id=?");
+            st.setInt(1, groupid);
+
+            ResultSet rs = st.executeQuery();
+            if(!rs.next()){
+                return false;
+            }
+        } catch (SQLException e){ System.err.println("SQLException in addProduct()");}
+        return true;
+    }
+
+    public boolean isProduct(int prodid){
+        try {
+            PreparedStatement st = connection.prepareStatement("SELECT price FROM product WHERE id=?");
+            st.setInt(1, prodid);
+
+            ResultSet rs = st.executeQuery();
+
+            if (!rs.next()) {
+                return false;
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return true;
     }
 
     public boolean ifGroupIdExists(Integer i){
