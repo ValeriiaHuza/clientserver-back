@@ -25,7 +25,7 @@ public class Auth extends com.sun.net.httpserver.Authenticator {
             return checkGroup(httpExchange);
         } else if(httpExchange.getRequestURI().toString().startsWith("/api/goods")){
             try {
-                int prodid = HandlerAllGoods.getGroupId(httpExchange);
+                int prodid = HandlerAllGoods.getGroupID(httpExchange);
                 if (!dbc.hasGroup(prodid)) {
                     return new Failure(404);
                 }

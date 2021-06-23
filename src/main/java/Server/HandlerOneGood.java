@@ -88,6 +88,24 @@ public class HandlerOneGood implements HttpHandler {
         return Integer.parseInt(res);
     }
 
+    public static boolean allIsCorrect(HttpExchange httpExchange){
+        try {
+            String query = httpExchange.getRequestURI().getQuery();
+            JSONObject jsonObj = MyHttpServer.getJsonFromQuery(query);
+            String prodname = jsonObj.getString("productname");
+            String description = jsonObj.getString("description");
+            int price = jsonObj.getInt("price");
+            int amount = jsonObj.getInt("amount");
+            int groupid = jsonObj.getInt("groupid");
+            if(prodname.length() < 1 || description.length() < 1
+                    || price<0 || amount<0 || groupid<0)
+                return false;
+        } catch (Exception e){
+            return false;
+        }
+        return true;
+    }
+
     private static void getProduct(HttpExchange httpExchange, OutputStream os) throws IOException {
         String url = httpExchange.getRequestURI().toString();
 

@@ -74,17 +74,14 @@ public class HandlerAllGoods implements HttpHandler {
         return Integer.parseInt(res);
     }
 
-    public Integer getGroupId(String name){
-        try {
-            PreparedStatement st = connection.prepareStatement( "SELECT * FROM " +group+ " WHERE groupName=?");
-            st.setString(1, name);
-
-            ResultSet rs = st.executeQuery();
-            return rs.getInt("id");
-        } catch (SQLException e) {
-            e.printStackTrace();
+    public static int getGroupID(HttpExchange httpExchange){
+        String str = httpExchange.getRequestURI().toString().substring(14);
+        String res = "";
+        for(int i=0; i<str.length(); i++) {
+            if(str.charAt(i)=='?') break;
+            res += str.charAt(i);
         }
-        return null;
+        return Integer.parseInt(res);
     }
     /////////////////////////////////////////////////////////////////////////////////
 
