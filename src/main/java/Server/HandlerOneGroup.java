@@ -75,6 +75,20 @@ public class HandlerOneGroup implements HttpHandler {
             os.write(bytes);
         }
         }
+        else if(method.equals("POST")){
+            JSONObject jsonObj = MyHttpServer.getJsonFromQuery(httpExchange.getRequestURI().getQuery());
+
+            String groupName = db.getGroupByID(jsonObj.getInt("id")).getName();
+            if(jsonObj.has("groupName")){
+                db.updateGroupName(groupName,jsonObj.getString("groupName") );
+            }
+
+            if (jsonObj.has("description")){
+                db.updateGroupDescription(groupName,jsonObj.getString("description"));
+            }
+
+            httpExchange.sendResponseHeaders(204,-1);
+        }
         os.close();
     }
 
