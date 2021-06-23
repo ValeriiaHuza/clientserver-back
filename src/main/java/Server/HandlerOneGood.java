@@ -40,9 +40,9 @@ public class HandlerOneGood implements HttpHandler {
         else if(httpExchange.getRequestMethod().equals("PUT")){
             putProduct(httpExchange, os);
         }
-//        else if(httpExchange.getRequestMethod().equals("POST")){
-//            postProduct(httpExchange);
-//        }
+        else if(httpExchange.getRequestMethod().equals("POST")){
+            postProduct(httpExchange, os);
+        }
         else if (httpExchange.getRequestMethod().equals("DELETE")){
             deleteProduct(httpExchange,os);
         }
@@ -52,6 +52,54 @@ public class HandlerOneGood implements HttpHandler {
         os.close();
         httpExchange.close();
     }
+
+    private static void postProduct(HttpExchange httpExchange, OutputStream os) throws IOException {
+
+        JSONObject jsonObj = MyHttpServer.getJsonFromQuery(httpExchange.getRequestURI().getQuery());
+
+        String productName = db.getProductByID(jsonObj.getInt("id")).getName();
+
+        if(jsonObj.has("name")){
+            db.updateProductName(productName, jsonObj.getString("name"));
+        }
+
+        if(jsonObj.has("price")) {
+            if (jsonObj.getDouble("price") < 0) {
+                sendResponse(httpExchange,409,"incorrect information");
+            } else {
+                db.updateProductPrice(productName, jsonObj.getDouble("price"));
+            }
+        }
+
+        if(jsonObj.has("amount")) {
+            if (jsonObj.getDouble("amount") < 0) {
+                sendResponse(httpExchange,409,"incorrect information");
+            } else {
+                db.updateProductAmount(productName, jsonObj.getDouble("amount"));
+              }
+        }
+
+        if(jsonObj.has("description")){
+            db.updateProductDescription(productName,jsonObj.getString("description"));
+        }
+
+        if(jsonObj.has("maker")){
+            db.updateProductMaker(productName,jsonObj.getString("maker"));
+             }
+
+        if(jsonObj.has("groupId")) {
+            int groupId = db.getGroupId( jsonObj.getString("groupId"));
+            db.updateProductGroup(productName, groupId);
+
+        }
+
+
+        byte[] bytes = "product update".getBytes();
+
+        httpExchange.sendResponseHeaders(204, bytes.length);
+        os.write(bytes);
+    }
+
 
     private static void putProduct(HttpExchange httpExchange, OutputStream os) throws IOException {
         JSONObject jsonObj = MyHttpServer.getJsonFromQuery(httpExchange.getRequestURI().getQuery());
