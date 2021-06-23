@@ -18,6 +18,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class HandlerAllGoods implements HttpHandler {
 
@@ -40,13 +41,35 @@ public class HandlerAllGoods implements HttpHandler {
 
         System.out.println(method);
 
-        if (method.equals("GET")) {
+        String uri = httpExchange.getRequestURI().getPath();
+        String[] array = uri.split("/");
+        System.out.println(array.toString());
+
+        if (method.equals("GET") && array.length==3) {
             getProducts(httpExchange, os);
+        }
+        else if(method.equals("GET") && array.length==4){
+            getProductsInGroup(httpExchange, os,Integer.valueOf(array[3]));
         }
         else {
             httpExchange.sendResponseHeaders(405, 0);
         }
         httpExchange.close();
+    }
+
+    private void getProductsInGroup(HttpExchange httpExchange, OutputStream os, Integer valueOf) throws IOException {
+        ArrayList<Product> ar = MyHttpServer.db.showAllProductsInGroup(db.getGroupByID(valueOf).getName());
+
+        JSONArray res = new JSONArray();
+
+        for ( Product i : ar){
+            res.put(i.getName()+"#"+i.getId());
+        }
+
+        System.out.println(res);
+        byte[] bytes = res.toString().getBytes();
+        httpExchange.sendResponseHeaders(201, bytes.length);
+        os.write(bytes);
     }
 
     private static void getProducts(HttpExchange httpExchange, OutputStream os) throws IOException {

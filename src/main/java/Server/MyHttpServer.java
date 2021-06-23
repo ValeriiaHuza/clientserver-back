@@ -33,6 +33,15 @@ public class MyHttpServer {
           db.insertProductToDB(new Product("рис",2,"description","maker",30,999));
           db.insertProductToDB(new Product("гречка",2,"description","maker",56,88));
           db.insertProductToDB(new Product("кока-кола",3,"description","maker",10,290));
+        db.insertProductToDB(new Product("кока-кола1",3,"description","maker",10,290));
+        db.insertProductToDB(new Product("кока-кола2",3,"description","maker",10,290));
+        db.insertProductToDB(new Product("кока-кола3",3,"description","maker",10,290));
+        db.insertProductToDB(new Product("кока-кола4",3,"description","maker",10,290));
+        db.insertProductToDB(new Product("кока-кола5",3,"description","maker",10,290));
+        db.insertProductToDB(new Product("кока-кола6",3,"description","maker",10,290));
+        db.insertProductToDB(new Product("кока-кола7",3,"description","maker",10,290));
+        db.insertProductToDB(new Product("кока-кола8",3,"description","maker",10,290));
+        db.insertProductToDB(new Product("кока-кола9",3,"description","maker",10,290));
 
           serverStart();
     }
