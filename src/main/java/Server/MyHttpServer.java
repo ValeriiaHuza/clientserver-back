@@ -1,5 +1,6 @@
 package Server;
 
+import DBConnection.Product;
 import com.sun.net.httpserver.*;
 //import org.apache.http.impl.bootstrap.HttpServer;
 import org.json.JSONObject;
@@ -25,11 +26,15 @@ public class MyHttpServer {
 
           db.insertGroupToDB(new ProductGroup("одяг","description"));
           db.insertGroupToDB(new ProductGroup("крупи","description"));
-          db.insertGroupToDB(new ProductGroup("бакалія","description"));
+          db.insertGroupToDB(new ProductGroup("напої","description"));
 
-//        db.insertProductToDB(new Product("meat",1,"description","maker",20,20));
+          db.insertProductToDB(new Product("кофтина",1,"description","maker",200,20));
+          db.insertProductToDB(new Product("взуття",1,"description","maker",2000,1));
+          db.insertProductToDB(new Product("рис",2,"description","maker",30,999));
+          db.insertProductToDB(new Product("гречка",2,"description","maker",56,88));
+          db.insertProductToDB(new Product("кока-кола",3,"description","maker",10,290));
 
-        serverStart();
+          serverStart();
     }
 
     public static void serverStart() throws IOException {
@@ -40,8 +45,8 @@ public class MyHttpServer {
 
         server.createContext("/api/groups", new HandlerAllGroups(db));
         server.createContext("/api/group", new HandlerOneGroup(db));
-        server.createContext("/api/good", new HandlerAllGoods(db));
-
+        server.createContext("/api/goods", new HandlerAllGoods(db));
+        server.createContext("/api/good", new HandlerOneGood(db));
 //
 //        context.setAuthenticator(new Authenticator() {
 //            @Override
