@@ -25,7 +25,6 @@ public class HandlerOneGroup implements HttpHandler {
     public void handle(HttpExchange httpExchange) throws IOException {
         OutputStream os = httpExchange.getResponseBody();
         String method = httpExchange.getRequestMethod();
-        System.out.println(method);
         if(method.equals("OPTIONS")){
             byte[] bytes = "Options".getBytes();
             httpExchange.sendResponseHeaders(201, bytes.length);
@@ -36,8 +35,6 @@ public class HandlerOneGroup implements HttpHandler {
             ObjectMapper om = new ObjectMapper();
 
             ProductGroup fromreqeust = om.readValue(jsonObj.toString(),ProductGroup.class);
-
-            System.out.println(fromreqeust.toString());
             MyHttpServer.db.insertGroupToDB(fromreqeust);
 
             byte[] bytes = "group created".getBytes();
@@ -49,7 +46,6 @@ public class HandlerOneGroup implements HttpHandler {
             String[] array = httpExchange.getRequestURI().getPath().split("/");
             ProductGroup obj = db.getGroupByID(Integer.parseInt(array[array.length-1]));
             String str = "{'groupname':'"+obj.getName()+"','description':'"+obj.getDescription()+"'}";
-            System.out.println(str);
             byte[] bytes = str.getBytes();
             httpExchange.sendResponseHeaders(201, bytes.length);
             os.write(bytes);
@@ -77,7 +73,6 @@ public class HandlerOneGroup implements HttpHandler {
         }
         else if(method.equals("POST")){
             JSONObject jsonObj = MyHttpServer.getJsonFromQuery(httpExchange.getRequestURI().getQuery());
-
             String groupName = db.getGroupByID(jsonObj.getInt("id")).getName();
             if(jsonObj.has("groupName")){
                 db.updateGroupName(groupName,jsonObj.getString("groupName") );
