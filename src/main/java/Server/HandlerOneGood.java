@@ -37,9 +37,9 @@ public class HandlerOneGood implements HttpHandler {
         else if (method.equals("GET")) {
             getProduct(httpExchange,os);
         }
-//        else if(httpExchange.getRequestMethod().equals("PUT")){
-//            putProduct(httpExchange);
-//        }
+        else if(httpExchange.getRequestMethod().equals("PUT")){
+            putProduct(httpExchange, os);
+        }
 //        else if(httpExchange.getRequestMethod().equals("POST")){
 //            postProduct(httpExchange);
 //        }
@@ -53,6 +53,34 @@ public class HandlerOneGood implements HttpHandler {
         httpExchange.close();
     }
 
+    private static void putProduct(HttpExchange httpExchange, OutputStream os) throws IOException {
+        JSONObject jsonObj = MyHttpServer.getJsonFromQuery(httpExchange.getRequestURI().getQuery());
+        ObjectMapper om = new ObjectMapper();
+
+
+        int groupId = db.getGroupId( jsonObj.getString("groupId"));
+
+        JSONObject newJSON = new JSONObject();
+        newJSON.put("name",jsonObj.getString("name"));
+        newJSON.put("groupId",groupId);
+        newJSON.put("description",jsonObj.getString("description"));
+        newJSON.put("maker",jsonObj.getString("maker"));
+        newJSON.put("price",jsonObj.getString("price"));
+        newJSON.put("amount",jsonObj.getString("amount"));
+
+        System.out.println(newJSON);
+
+        Product fromreqeust = om.readValue(newJSON.toString(),Product.class);
+
+
+        System.out.println(fromreqeust.toString());
+        MyHttpServer.db.insertProductToDB(fromreqeust);
+
+        byte[] bytes = "product created".getBytes();
+
+        httpExchange.sendResponseHeaders(201, bytes.length);
+        os.write(bytes);
+    }
 
     private static void deleteProduct(HttpExchange httpExchange, OutputStream os) throws IOException {
         String url = httpExchange.getRequestURI().toString();
