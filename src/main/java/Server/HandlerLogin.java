@@ -1,11 +1,11 @@
-package practice5;
+package Server;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpServer;
 import org.apache.commons.codec.digest.DigestUtils;
-import practice4.ProductDB;
+import DBConnection.ProductDB;
 
 import java.io.IOException;
 

@@ -1,4 +1,4 @@
-package practice4;
+package DBConnection;
 
 import java.util.Objects;
 

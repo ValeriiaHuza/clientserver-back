@@ -1,6 +1,5 @@
-package practice4;
+package DBConnection;
 
-import java.util.ArrayList;
 import java.util.Objects;
 
 public class ProductGroup {

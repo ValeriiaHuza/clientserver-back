@@ -1,22 +1,22 @@
-package practice5;
+package Server;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpServer;
-import practice4.Product;
-import practice4.ProductDB;
+import DBConnection.Product;
+import DBConnection.ProductDB;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
-public class HandlerGoods implements HttpHandler {
+public class HandlerOneGood implements HttpHandler {
 
     private static HttpServer server;
     private static ProductDB db;
 
-    HandlerGoods(ProductDB db){
+    HandlerOneGood(ProductDB db){
         super();
         this.db = db;
     }
@@ -178,7 +178,7 @@ public class HandlerGoods implements HttpHandler {
         if (getProduct != null) {
             sendResponse(httpExchange, 200,getProduct.toString());
         } else {
-            sendResponse(httpExchange,404,"no such products");
+            sendResponse(httpExchange,404,"no such product");
         }
     }
 

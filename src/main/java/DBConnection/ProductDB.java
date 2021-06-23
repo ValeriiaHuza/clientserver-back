@@ -1,6 +1,6 @@
-package practice4;
+package DBConnection;
 
-import practice5.User;
+import Server.User;
 
 import java.sql.*;
 import java.util.ArrayList;

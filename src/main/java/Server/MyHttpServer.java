@@ -1,22 +1,15 @@
-package practice5;
+package Server;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sun.net.httpserver.*;
-import org.apache.commons.codec.digest.DigestUtils;
-import org.apache.http.Header;
 //import org.apache.http.impl.bootstrap.HttpServer;
-import org.json.JSONArray;
 import org.json.JSONObject;
-import practice4.Product;
-import practice4.ProductDB;
-import practice4.ProductGroup;
+import DBConnection.ProductDB;
+import DBConnection.ProductGroup;
 
 import java.io.*;
 import java.net.InetSocketAddress;
-import java.nio.charset.StandardCharsets;
 //import java.security.acl.Group;
-import java.util.ArrayList;
+
 
 public class MyHttpServer {
     public static ProductDB db = new ProductDB();
@@ -45,9 +38,9 @@ public class MyHttpServer {
 
 //        HttpContext context = server.createContext("/", MyHttpServer::myHandler);
 
-        server.createContext("/api/groups", new HandlerGroups(db));
-        server.createContext("/api/group", new HandlerGroup(db));
-        server.createContext("/api/good", new HandlerGoods(db));
+        server.createContext("/api/groups", new HandlerAllGroups(db));
+        server.createContext("/api/group", new HandlerOneGroup(db));
+        server.createContext("/api/good", new HandlerAllGoods(db));
 
 //
 //        context.setAuthenticator(new Authenticator() {

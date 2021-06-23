@@ -1,24 +1,22 @@
-package practice5;
+package Server;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpServer;
 import org.json.JSONArray;
-import org.json.JSONObject;
-import practice4.ProductDB;
-import practice4.ProductGroup;
+import DBConnection.ProductDB;
+import DBConnection.ProductGroup;
 
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ArrayList;
 
-public class HandlerGroups implements HttpHandler {
+public class HandlerAllGroups implements HttpHandler {
 
     private static HttpServer server;
     private static ProductDB db;
 
-    HandlerGroups(ProductDB db){
+    HandlerAllGroups(ProductDB db){
         super();
         this.db = db;
     }

@@ -1,4 +1,4 @@
-package practice5;
+package Server;
 
 public class User {
 
