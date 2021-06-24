@@ -88,7 +88,7 @@ public class HandlerAllGoods implements HttpHandler {
         ArrayList<Product> array = new ArrayList<Product>() ;
 
         if(newObject.has("name")){
-            ArrayList<Product> temp = db.getByName(newObject.getString("name"));
+            ArrayList<Product> temp = db.getByName(newObject.getString("name")+"%");
             array.addAll(temp);
         }
 
