@@ -72,18 +72,18 @@ public class Auth extends com.sun.net.httpserver.Authenticator {
 
     private Result checkGood(HttpExchange httpExchange) {
         String method = httpExchange.getRequestMethod();
-        if (method.equals("PUT")) {
-            if (!HandlerOneGood.allIsCorrect(httpExchange))
-                return new Failure(409);
-        } else if (method.equals("GET")) {
-            try {
-                int prodid = HandlerOneGood.getProdID(httpExchange);
-                if (!dbc.isProduct(prodid)) {
-                    return new Failure(404);
+//        if (method.equals("PUT")) {
+//            if (!HandlerOneGood.allIsCorrect(httpExchange))
+//                return new Failure(409);
+            if (method.equals("GET")) {
+                try {
+                    int prodid = HandlerOneGood.getProdID(httpExchange);
+                    if (!dbc.isProduct(prodid)) {
+                        return new Failure(404);
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
         } else if (method.equals("POST")) {
             JSONObject jsonObj = MyHttpServer.getJsonFromQuery(httpExchange.getRequestURI().getQuery());
             if (!jsonObj.has("id"))

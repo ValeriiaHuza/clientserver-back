@@ -54,11 +54,32 @@ public class HandlerAllGoods implements HttpHandler {
         else if(method.equals("GET") && array.length==4){
             getProductsInGroup(httpExchange, os,Integer.valueOf(array[3]));
         }
+        else if(method.equals("PUT")){
+            //search(httpExchange, os);
+        }
         else {
             httpExchange.sendResponseHeaders(405, 0);
         }
         httpExchange.close();
     }
+
+//    private void search(HttpExchange httpExchange, OutputStream os) throws IOException {
+//        //ArrayList<Product> ar = MyHttpServer.db.showAllProductsInGroup(db.getGroupByID(valueOf).getName());
+//
+//        JSONArray res = new JSONArray();
+//
+//        for ( Product i : ar){
+//            //res.put(i.getName()+"#"+i.getId());
+//            res.put(i.getName()+"#"+i.getId());
+//
+//        }
+//
+//        System.out.println(res);
+//        byte[] bytes = res.toString().getBytes();
+//        httpExchange.sendResponseHeaders(201, bytes.length);
+//        os.write(bytes);
+//    }
+//    }
 
     private void getProductsInGroup(HttpExchange httpExchange, OutputStream os, Integer valueOf) throws IOException {
         ArrayList<Product> ar = MyHttpServer.db.showAllProductsInGroup(db.getGroupByID(valueOf).getName());
