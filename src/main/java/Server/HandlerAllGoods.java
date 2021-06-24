@@ -8,6 +8,7 @@ import com.sun.net.httpserver.HttpServer;
 import DBConnection.Product;
 import DBConnection.ProductDB;
 import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -19,6 +20,8 @@ import java.sql.SQLException;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 
 public class HandlerAllGoods implements HttpHandler {
 
@@ -46,16 +49,20 @@ public class HandlerAllGoods implements HttpHandler {
 
         String uri = httpExchange.getRequestURI().getPath();
         String[] array = uri.split("/");
-        System.out.println(array.toString());
 
-        if (method.equals("GET") && array.length==3) {
+        if(method.equals("OPTIONS")) {
+            byte[] bytes = "Options".getBytes();
+            httpExchange.sendResponseHeaders(201, bytes.length);
+            os.write(bytes);
+        }
+        else if (method.equals("GET") && array.length==3) {
             getProducts(httpExchange, os);
         }
         else if(method.equals("GET") && array.length==4){
             getProductsInGroup(httpExchange, os,Integer.valueOf(array[3]));
         }
         else if(method.equals("PUT")){
-            //search(httpExchange, os);
+            search(httpExchange, os);
         }
         else {
             httpExchange.sendResponseHeaders(405, 0);
@@ -63,23 +70,57 @@ public class HandlerAllGoods implements HttpHandler {
         httpExchange.close();
     }
 
-//    private void search(HttpExchange httpExchange, OutputStream os) throws IOException {
-//        //ArrayList<Product> ar = MyHttpServer.db.showAllProductsInGroup(db.getGroupByID(valueOf).getName());
-//
-//        JSONArray res = new JSONArray();
-//
-//        for ( Product i : ar){
-//            //res.put(i.getName()+"#"+i.getId());
-//            res.put(i.getName()+"#"+i.getId());
-//
-//        }
-//
-//        System.out.println(res);
-//        byte[] bytes = res.toString().getBytes();
-//        httpExchange.sendResponseHeaders(201, bytes.length);
-//        os.write(bytes);
-//    }
-//    }
+    private void search(HttpExchange httpExchange, OutputStream os) throws IOException {
+        String query = "{";
+        String[] ar1 = httpExchange.getRequestURI().getQuery().split("&");
+        System.out.println("uri array " + Arrays.toString(ar1));
+        for(int i=0; i<ar1.length; i++){
+            String[] ar2 = ar1[i].split("=");
+            query += "'"+ar2[0]+"':'"+ar2[1]+"'";
+            if(i!=ar1.length-1) query += ",";
+        }
+        query += "}";
+
+        System.out.println("query - " + query);
+
+        JSONObject newObject = new JSONObject(query);
+
+        ArrayList<Product> array = new ArrayList<Product>() ;
+
+        if(newObject.has("name")){
+            ArrayList<Product> temp = db.getByName(newObject.getString("name"));
+            array.addAll(temp);
+        }
+
+        if (newObject.has("minPrice") && !newObject.has("maxPrice")){
+            ArrayList<Product> temp = db.getByPrice(newObject.getDouble("minPrice"),100000000);
+            array.addAll(temp);
+        }
+        else if (newObject.has("maxPrice") && !newObject.has("minPrice")){
+            ArrayList<Product> temp = db.getByPrice(0,newObject.getDouble("maxPrice"));
+            array.addAll(temp);
+        }
+        else if (newObject.has("maxPrice") && newObject.has("minPrice")){
+            ArrayList<Product> temp = db.getByPrice(newObject.getDouble("minPrice"),newObject.getDouble("maxPrice"));
+            array.addAll(temp);
+        }
+
+        //ArrayList<Product> ar = MyHttpServer.db.showAllProductsInGroup(db.getGroupByID(valueOf).getName());
+
+        JSONArray res = new JSONArray();
+
+        for ( Product i : array){
+            //res.put(i.getName()+"#"+i.getId());
+            res.put(i.getName()+"#"+i.getId());
+
+        }
+
+        System.out.println(res);
+        byte[] bytes = res.toString().getBytes();
+        httpExchange.sendResponseHeaders(201, bytes.length);
+        os.write(bytes);
+    }
+
 
     private void getProductsInGroup(HttpExchange httpExchange, OutputStream os, Integer valueOf) throws IOException {
         ArrayList<Product> ar = MyHttpServer.db.showAllProductsInGroup(db.getGroupByID(valueOf).getName());
