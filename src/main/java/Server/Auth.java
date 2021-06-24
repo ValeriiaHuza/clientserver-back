@@ -91,9 +91,6 @@ public class Auth extends com.sun.net.httpserver.Authenticator {
             if (!dbc.isProduct(jsonObj.getInt("id"))) {
                 return new Failure(404);
             }
-            if (!HandlerOneGood.allIsCorrect(jsonObj)) {
-                return new Failure(409);
-            }
         } else if (method.equals("DELETE")) {
             try {
                 int prodid = HandlerOneGood.getProdID(httpExchange);
