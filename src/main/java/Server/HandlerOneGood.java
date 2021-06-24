@@ -156,12 +156,14 @@ public class HandlerOneGood implements HttpHandler {
     public static int getProdID(HttpExchange httpExchange)
     {
         String str = httpExchange.getRequestURI().toString().substring(10);
+        //str.replace('/', ' ');
+        System.out.println(">>>>>>>>>getProdID() in handlerOneGood>>>>>>>>>>"+str);
         String res = "";
         for(int i=0; i<str.length(); i++) {
             if(str.charAt(i)=='?') break;
             res += str.charAt(i);
         }
-        return Integer.parseInt(res);
+        return Integer.parseInt(str);
     }
 
     public static boolean allIsCorrect(HttpExchange httpExchange){

@@ -109,16 +109,18 @@ public class HandlerAllGoods implements HttpHandler {
     public static int getAllProdID(HttpExchange httpExchange)
     {
         String str = httpExchange.getRequestURI().toString().substring(10);
+        str.replaceFirst("/", "");
+        System.out.println(">>>>>>>getAllProdID() in handlerAllGoods>>>>>>>>"+str);
         String res = "";
         for(int i=0; i<str.length(); i++) {
             if(str.charAt(i)=='?') break;
             res += str.charAt(i);
         }
-        return Integer.parseInt(res);
+        return Integer.parseInt(str);
     }
 
     public static int getGroupID(HttpExchange httpExchange){
-        String str = httpExchange.getRequestURI().toString().substring(14);
+        String str = httpExchange.getRequestURI().toString().substring(9);
         String res = "";
         for(int i=0; i<str.length(); i++) {
             if(str.charAt(i)=='?') break;

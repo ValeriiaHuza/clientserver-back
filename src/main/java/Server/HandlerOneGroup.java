@@ -89,12 +89,15 @@ public class HandlerOneGroup implements HttpHandler {
 
     public static int getGroupID(HttpExchange httpExchange){
         String str = httpExchange.getRequestURI().toString().substring(11);
+        System.out.println(">>>>>>>>httpExchange.getRequestURI().toString()>>>>>>>."+httpExchange.getRequestURI().toString());
+        //str.replaceFirst("/", "");
+        System.out.println(">>>>>>>>>> getGroupID() int handlerOneGroup >>>>>>>>>>>>>" + str); ////////////check
         String res = "";
         for(int i=0; i<str.length(); i++) {
             if(str.charAt(i)=='?') break;
             res += str.charAt(i);
         }
-        return Integer.parseInt(res);
+        return Integer.parseInt(str);
     }
 
     public static boolean allIsCorrect(HttpExchange httpExchange){

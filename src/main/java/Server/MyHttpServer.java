@@ -3,6 +3,7 @@ package Server;
 import DBConnection.Product;
 import com.sun.net.httpserver.*;
 //import org.apache.http.impl.bootstrap.HttpServer;
+import org.apache.commons.codec.digest.DigestUtils;
 import org.json.JSONObject;
 import DBConnection.ProductDB;
 import DBConnection.ProductGroup;
@@ -20,9 +21,9 @@ public class MyHttpServer {
 
         db.initDB("test");
 
-//        db.insertUserToDB(new User("login", DigestUtils.md5Hex("password")));
-//        db.insertUserToDB(new User("login1",DigestUtils.md5Hex("password1")));
-//        db.insertUserToDB(new User("login2",DigestUtils.md5Hex("password2")));
+        db.insertUserToDB(new User("login", DigestUtils.md5Hex("password")));
+        db.insertUserToDB(new User("login1",DigestUtils.md5Hex("password1")));
+        db.insertUserToDB(new User("login2",DigestUtils.md5Hex("password2")));
 
           db.insertGroupToDB(new ProductGroup("одяг","description"));
           db.insertGroupToDB(new ProductGroup("крупи","description"));
@@ -44,12 +45,14 @@ public class MyHttpServer {
         db.insertProductToDB(new Product("кока-кола8",3,"description","maker",10,290));
         db.insertProductToDB(new Product("кока-кола9",3,"description","maker",10,290));
 
-          serverStart();
+
+        serverStart();
     }
 
     public static void serverStart() throws IOException {
         server  = HttpServer.create(new InetSocketAddress(5000), 0);
-        server.start();
+
+      //  server.setExecutor(java.util.concurrent.Executors.newCachedThreadPool());
 
 //        HttpContext context = server.createContext("/", MyHttpServer::myHandler);
 
@@ -57,12 +60,15 @@ public class MyHttpServer {
         HttpContext context3 = server.createContext("/api/group", new HandlerOneGroup(db));
         HttpContext context4 = server.createContext("/api/goods", new HandlerAllGoods(db));
         HttpContext context5 = server.createContext("/api/good", new HandlerOneGood(db));
-//
-//        context2.setAuthenticator(new Auth());
-//        context3.setAuthenticator(new Auth(db));
-//        context4.setAuthenticator(new Auth(db));
-//        context5.setAuthenticator(new Auth(db));
-//
+
+      // context2.setAuthenticator(new Auth());
+       context3.setAuthenticator(new Auth(db));
+       //context4.setAuthenticator(new Auth(db));
+       context5.setAuthenticator(new Auth(db));
+
+
+     //   server.setExecutor(null);
+        server.start();
 //        context.setAuthenticator(new Authenticator() {
 //            @Override
 //            public Result authenticate(HttpExchange httpExchange) {

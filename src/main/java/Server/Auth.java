@@ -32,17 +32,6 @@ public class Auth extends com.sun.net.httpserver.Authenticator {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-        } else if(httpExchange.getRequestURI().toString().startsWith("/api/price")){
-            if (httpExchange.getRequestMethod().equals("PUT")) {
-                try {
-                    int prodid = HandlerAllGoods.getAllProdID(httpExchange);
-                    if (!dbc.hasGroup(prodid)) {
-                        return new Failure(404);
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
         }
         return new Success(new HttpPrincipal("c0nst", "realm"));
     }
