@@ -59,6 +59,8 @@ public class HandlerOneGood implements HttpHandler {
 
         String productName = db.getProductByID(jsonObj.getInt("id")).getName();
 
+        int productId = jsonObj.getInt("id");
+
         if(jsonObj.has("name")){
             db.updateProductName(productName, jsonObj.getString("name"));
         }
@@ -67,7 +69,7 @@ public class HandlerOneGood implements HttpHandler {
             if (jsonObj.getDouble("price") < 0) {
                 sendResponse(httpExchange,409,"incorrect information");
             } else {
-                db.updateProductPrice(productName, jsonObj.getDouble("price"));
+                db.updateProductPrice(db.getProductByID(productId).getName(), jsonObj.getDouble("price"));
             }
         }
 
@@ -75,21 +77,21 @@ public class HandlerOneGood implements HttpHandler {
             if (jsonObj.getDouble("amount") < 0) {
                 sendResponse(httpExchange,409,"incorrect information");
             } else {
-                db.updateProductAmount(productName, jsonObj.getDouble("amount"));
+                db.updateProductAmount(db.getProductByID(productId).getName(), jsonObj.getDouble("amount"));
               }
         }
 
         if(jsonObj.has("description")){
-            db.updateProductDescription(productName,jsonObj.getString("description"));
+            db.updateProductDescription(db.getProductByID(productId).getName(),jsonObj.getString("description"));
         }
 
         if(jsonObj.has("maker")){
-            db.updateProductMaker(productName,jsonObj.getString("maker"));
+            db.updateProductMaker(db.getProductByID(productId).getName(),jsonObj.getString("maker"));
              }
 
         if(jsonObj.has("groupId")) {
             int groupId = db.getGroupId( jsonObj.getString("groupId"));
-            db.updateProductGroup(productName, groupId);
+            db.updateProductGroup(db.getProductByID(productId).getName(), groupId);
 
         }
 

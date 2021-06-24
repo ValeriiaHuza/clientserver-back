@@ -241,14 +241,16 @@ public class ProductDB {
 
     public boolean hasGroup(int groupid){
         try {
-            PreparedStatement st = connection.prepareStatement("SELECT description FROM groupTable WHERE id=?");
+            PreparedStatement st = connection.prepareStatement("SELECT descriptionGroup FROM groupTable WHERE id=?");
             st.setInt(1, groupid);
 
             ResultSet rs = st.executeQuery();
             if(!rs.next()){
                 return false;
             }
-        } catch (SQLException e){ System.err.println("SQLException in addProduct()");}
+        } catch (SQLException e){
+            e.printStackTrace();
+        }
         return true;
     }
 
@@ -472,12 +474,13 @@ public class ProductDB {
 
     }
 
-    public void updateGroupDescription (String name, String newDescription){
+    public void updateGroupDescription (Integer id, String newDescription){
         try {
-            PreparedStatement ps = connection.prepareStatement("UPDATE "+ group +" SET descriptionGroup = ? WHERE groupName = ?");
+            System.out.println("name" + id + "newDescription"+ newDescription);
+            PreparedStatement ps = connection.prepareStatement("UPDATE "+ group +" SET descriptionGroup = ? WHERE id = ?");
 
             ps.setString(1,newDescription);
-            ps.setString(2,name);
+            ps.setInt(2,id);
 
             ps.executeUpdate();
             ps.close();

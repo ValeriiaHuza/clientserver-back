@@ -1,5 +1,6 @@
 package Server;
 
+import DBConnection.Product;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
@@ -79,7 +80,9 @@ public class HandlerOneGroup implements HttpHandler {
             }
 
             if (jsonObj.has("description")){
-                db.updateGroupDescription(groupName,jsonObj.getString("description"));
+                db.updateGroupDescription(jsonObj.getInt("id"),jsonObj.getString("description"));
+                ProductGroup newGroup = db.getGroupByID(jsonObj.getInt("id"));
+                System.out.println(newGroup);
             }
 
             httpExchange.sendResponseHeaders(204,-1);
