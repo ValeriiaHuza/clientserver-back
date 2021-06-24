@@ -33,6 +33,7 @@ public class MyHttpServer {
           db.insertProductToDB(new Product("рис",2,"description","maker",30,999));
           db.insertProductToDB(new Product("гречка",2,"description","maker",56,88));
           db.insertProductToDB(new Product("кока-кола",3,"description","maker",10,290));
+
         db.insertProductToDB(new Product("кока-кола1",3,"description","maker",10,290));
         db.insertProductToDB(new Product("кока-кола2",3,"description","maker",10,290));
         db.insertProductToDB(new Product("кока-кола3",3,"description","maker",10,290));
@@ -52,10 +53,15 @@ public class MyHttpServer {
 
 //        HttpContext context = server.createContext("/", MyHttpServer::myHandler);
 
-        server.createContext("/api/groups", new HandlerAllGroups(db));
-        server.createContext("/api/group", new HandlerOneGroup(db));
-        server.createContext("/api/goods", new HandlerAllGoods(db));
-        server.createContext("/api/good", new HandlerOneGood(db));
+        HttpContext context2 = server.createContext("/api/groups", new HandlerAllGroups(db));
+        HttpContext context3 = server.createContext("/api/group", new HandlerOneGroup(db));
+        HttpContext context4 = server.createContext("/api/goods", new HandlerAllGoods(db));
+        HttpContext context5 = server.createContext("/api/good", new HandlerOneGood(db));
+//
+//        context2.setAuthenticator(new Auth());
+//        context3.setAuthenticator(new Auth(db));
+//        context4.setAuthenticator(new Auth(db));
+//        context5.setAuthenticator(new Auth(db));
 //
 //        context.setAuthenticator(new Authenticator() {
 //            @Override

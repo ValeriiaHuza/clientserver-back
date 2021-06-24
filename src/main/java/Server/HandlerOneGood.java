@@ -196,7 +196,8 @@ public class HandlerOneGood implements HttpHandler {
         res+="'price':'"+product.getPrice()+"',";
         res+="'amount':'"+product.getAmount()+"',";
         res+="'groupName':'"+db.getGroupByID(product.getGroupId()).getName()+"',";
-        res+="'producer':'"+product.getMaker()+"'}";
+        res+="'producer':'"+product.getMaker()+"',";
+        res+="'allPrice':'"+(product.getAmount()*product.getPrice())+"'}";
 
         byte[] bytes = res.getBytes();
         httpExchange.sendResponseHeaders(201, bytes.length);

@@ -25,6 +25,9 @@ public class HandlerAllGoods implements HttpHandler {
     private Connection connection;
     private String product = "product";
     private String group = "groupTable";
+
+    double priceAllProducts;
+
     ////////////////////////////////////////////
     private static HttpServer server;
     private static ProductDB db;
@@ -63,7 +66,9 @@ public class HandlerAllGoods implements HttpHandler {
         JSONArray res = new JSONArray();
 
         for ( Product i : ar){
-            res.put(i.getName()+"#"+i.getId());
+            //res.put(i.getName()+"#"+i.getId());
+            res.put(i.getName()+"#"+i.getId() + "#" + (i.getPrice()*i.getAmount()));
+
         }
 
         System.out.println(res);
@@ -71,6 +76,21 @@ public class HandlerAllGoods implements HttpHandler {
         httpExchange.sendResponseHeaders(201, bytes.length);
         os.write(bytes);
     }
+
+//    private void getPriceOfAllProductsInGroup(HttpExchange httpExchange, OutputStream os, Integer valueOf) throws IOException {
+//        ArrayList<Product> ar = MyHttpServer.db.showAllProductsInGroup(db.getGroupByID(valueOf).getName());
+//
+//        JSONArray res = new JSONArray();
+//
+//        for ( Product i : ar){
+//            res.put(i.getName()+"#"+i.getId() + "#" + (i.getPrice()*i.getAmount()));
+//        }
+//
+//        System.out.println(res);
+//        byte[] bytes = res.toString().getBytes();
+//        httpExchange.sendResponseHeaders(201, bytes.length);
+//        os.write(bytes);
+//    }
 
     private static void getProducts(HttpExchange httpExchange, OutputStream os) throws IOException {
         ArrayList<Product> ar = MyHttpServer.db.showAllProducts();
