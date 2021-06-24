@@ -16,7 +16,8 @@ public class ProductDB {
     public void initDB(String name){
          try {
              Class.forName("org.sqlite.JDBC");
-             connection = DriverManager.getConnection("jdbc:sqlite::memory:");
+             //connection = DriverManager.getConnection("jdbc:sqlite::memory:");
+             connection = DriverManager.getConnection("jdbc:sqlite:"+name);
 
 
              PreparedStatement st2 = connection.prepareStatement("create table if not exists '" + group + "' ("+

@@ -39,8 +39,8 @@ public class Auth extends com.sun.net.httpserver.Authenticator {
     private Result checkGroup(HttpExchange httpExchange) {
         String method = httpExchange.getRequestMethod();
         if (method.equals("PUT")) {
-            if (!HandlerOneGroup.allIsCorrect(httpExchange))
-                return new Failure(409);
+//            if (!HandlerOneGroup.allIsCorrect(httpExchange))
+//                return new Failure(409);
         } else if (method.equals("GET")) {
             try {
                 int prodid = HandlerOneGroup.getGroupID(httpExchange);
